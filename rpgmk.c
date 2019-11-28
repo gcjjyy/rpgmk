@@ -6,12 +6,13 @@ int ARG_WINDOW_WIDTH = 128;
 int ARG_WINDOW_HEIGHT = 128;
 int ARG_SCALE = 3;
 
-const int IMAGE_WIDTH = 80;
-const int IMAGE_HEIGHT = 96;
-const int IMAGE_HALF_WIDTH = (IMAGE_WIDTH >> 1);
-const int IMAGE_SIZE = IMAGE_HALF_WIDTH * IMAGE_HEIGHT;
-const int FRAME_WIDTH = (IMAGE_WIDTH >> 2);
-const int FRAME_HEIGHT = (IMAGE_HEIGHT >> 2);
+int IMAGE_COUNT;
+int IMAGE_WIDTH;
+int IMAGE_HEIGHT;
+int IMAGE_HALF_WIDTH;
+int IMAGE_SIZE;
+int FRAME_WIDTH;
+int FRAME_HEIGHT;
 
 SDL_Window *window = NULL;
 SDL_Surface *screenSurface = NULL;
@@ -34,78 +35,103 @@ void put_pixel(int x, int y, int index) {
 }
 
 void redraw(const char *filename) {
-    uint8_t enemy[IMAGE_SIZE];
-    uint8_t index_map[IMAGE_HEIGHT][IMAGE_WIDTH];
+    uint8_t *image = (uint8_t *)malloc(IMAGE_SIZE);
+    uint8_t *index_map = (uint8_t *)malloc(IMAGE_WIDTH * IMAGE_HEIGHT);
 
     screenSurface = SDL_GetWindowSurface(window);
     SDL_FillRect(screenSurface, NULL,
                  SDL_MapRGB(screenSurface->format, 0x00, 0x00, 0x00));
 
     FILE *fp = fopen(filename, "r");
-    fread(enemy, 1, IMAGE_SIZE, fp);
+
+    int x = 0;
+    int y = 0;
+
+    for (int image_index = 0; image_index < IMAGE_COUNT; image_index++) {
+        fread(image, IMAGE_SIZE, 1, fp);
+
+        for (int i = 0; i < IMAGE_HEIGHT; i++) {
+            for (int j = 0; j < IMAGE_HALF_WIDTH; j++) {
+                uint8_t dp = image[IMAGE_HALF_WIDTH * i + j];
+                index_map[(i * IMAGE_WIDTH) + (j * 2 + 0)] = (dp & 0xf0) >> 4;
+                index_map[(i * IMAGE_WIDTH) + (j * 2 + 1)] = (dp & 0x0f) >> 0;
+            }
+        }
+
+        for (int i = 0; i < FRAME_HEIGHT; i++) {
+            for (int j = 0; j < FRAME_WIDTH; j++) {
+                uint8_t data[4][4];
+                for (int r = 0; r < 4; r++) {
+                    for (int c = 0; c < 4; c++) {
+                        data[r][c] = index_map[(IMAGE_WIDTH * (FRAME_HEIGHT * r + i)) + (FRAME_WIDTH * c + j)];
+                    }
+                }
+
+                uint8_t data_tp[4][4];
+                for (int m = 0; m < 4; m++) {
+                    data_tp[m][0] =
+                        ((data[0][m] & 0b1000) >> 3) |
+                        ((data[1][m] & 0b1000) >> 2) |
+                        ((data[2][m] & 0b1000) >> 1) |
+                        ((data[3][m] & 0b1000) >> 0);
+
+                    data_tp[m][1] =
+                        ((data[0][m] & 0b0100) >> 2) |
+                        ((data[1][m] & 0b0100) >> 1) |
+                        ((data[2][m] & 0b0100) >> 0) |
+                        ((data[3][m] & 0b0100) << 1);
+
+                    data_tp[m][2] =
+                        ((data[0][m] & 0b0010) >> 1) |
+                        ((data[1][m] & 0b0010) >> 0) |
+                        ((data[2][m] & 0b0010) << 1) |
+                        ((data[3][m] & 0b0010) << 2);
+
+                    data_tp[m][3] =
+                        ((data[0][m] & 0b0001) >> 0) |
+                        ((data[1][m] & 0b0001) << 1) |
+                        ((data[2][m] & 0b0001) << 2) |
+                        ((data[3][m] & 0b0001) << 3);
+                }
+
+                for (int r = 0; r < 4; r++) {
+                    for (int c = 0; c < 4; c++) {
+                        put_pixel(x + 4 * j + c, y + 4 * i + r, data_tp[r][c]);
+                    }
+                }
+            }
+        }
+
+        x += IMAGE_WIDTH;
+        if (x >= ARG_WINDOW_WIDTH) {
+            x = 0;
+            y += IMAGE_HEIGHT;
+        }
+    }
+
     fclose(fp);
 
-    for (int i = 0; i < IMAGE_HEIGHT; i++) {
-        for (int j = 0; j < IMAGE_HALF_WIDTH; j++) {
-            uint8_t dp = enemy[IMAGE_HALF_WIDTH * i + j];
-            index_map[i][j * 2 + 0] = (dp & 0xf0) >> 4;
-            index_map[i][j * 2 + 1] = (dp & 0x0f) >> 0;
-        }
-    }
-
-    for (int i = 0; i < FRAME_HEIGHT; i++) {
-        for (int j = 0; j < FRAME_WIDTH; j++) {
-            uint8_t data[4][4];
-            for (int r = 0; r < 4; r++) {
-                for (int c = 0; c < 4; c++) {
-                    data[r][c] = index_map[FRAME_HEIGHT * r + i][FRAME_WIDTH * c + j];
-                }
-            }
-
-            uint8_t data_tp[4][4];
-            for (int m = 0; m < 4; m++) {
-                data_tp[m][0] =
-                    ((data[0][m] & 0b1000) >> 3) |
-                    ((data[1][m] & 0b1000) >> 2) |
-                    ((data[2][m] & 0b1000) >> 1) |
-                    ((data[3][m] & 0b1000) >> 0);
-
-                data_tp[m][1] =
-                    ((data[0][m] & 0b0100) >> 2) |
-                    ((data[1][m] & 0b0100) >> 1) |
-                    ((data[2][m] & 0b0100) >> 0) |
-                    ((data[3][m] & 0b0100) << 1);
-
-                data_tp[m][2] =
-                    ((data[0][m] & 0b0010) >> 1) |
-                    ((data[1][m] & 0b0010) >> 0) |
-                    ((data[2][m] & 0b0010) << 1) |
-                    ((data[3][m] & 0b0010) << 2);
-
-                data_tp[m][3] =
-                    ((data[0][m] & 0b0001) >> 0) |
-                    ((data[1][m] & 0b0001) << 1) |
-                    ((data[2][m] & 0b0001) << 2) |
-                    ((data[3][m] & 0b0001) << 3);
-            }
-
-            for (int r = 0; r < 4; r++) {
-                for (int c = 0; c < 4; c++) {
-                    put_pixel(4 * j + c, 4 * i + r, data_tp[r][c]);
-                }
-            }
-        }
-    }
+    free(index_map);
+    free(image);
 
     SDL_UpdateWindowSurface(window);
 }
 
 int main(int argc, char *argv[]) {
-    if (argc < 2) {
+    if (argc < 6) {
+        printf("Usage: %s <image> <count> <width> <height> <palette>\n", argv[1]);
         return 0;
     }
 
-    FILE *fp = fopen("PALET2.DAT", "r");
+    IMAGE_COUNT = atoi(argv[2]);
+    IMAGE_WIDTH = atoi(argv[3]);
+    IMAGE_HEIGHT = atoi(argv[4]);
+    IMAGE_HALF_WIDTH = (IMAGE_WIDTH >> 1);
+    IMAGE_SIZE = IMAGE_HALF_WIDTH * IMAGE_HEIGHT;
+    FRAME_WIDTH = (IMAGE_WIDTH >> 2);
+    FRAME_HEIGHT = (IMAGE_HEIGHT >> 2);
+
+    FILE *fp = fopen(argv[5], "r");
     for (int i = 0; i < 16; i++) {
         fread(&g_pal[i], 1, 3, fp);
         g_pal[i].r = g_pal[i].r << 4;
