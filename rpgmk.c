@@ -2,9 +2,9 @@
 #include <stdint.h>
 #include <stdio.h>
 
-int ARG_WINDOW_WIDTH = 128;
-int ARG_WINDOW_HEIGHT = 128;
-int ARG_SCALE = 3;
+int ARG_WINDOW_WIDTH = 640;
+int ARG_WINDOW_HEIGHT = 400;
+int ARG_SCALE = 1;
 
 int IMAGE_COUNT;
 int IMAGE_WIDTH;
@@ -119,7 +119,7 @@ void redraw(const char *filename) {
 
 int main(int argc, char *argv[]) {
     if (argc < 6) {
-        printf("Usage: %s <image> <count> <width> <height> <palette>\n", argv[1]);
+        printf("Usage: %s <image> <count> <width> <height> <palette>\n", argv[0]);
         return 0;
     }
 
