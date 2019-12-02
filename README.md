@@ -9,9 +9,10 @@ $ make
 
 # 사용법
 ```sh
-$ ./rpgmk CHR00.DAT 8 32 32 PALET.DAT
-$ ./rpgmk ENEMY00.DAT 1 80 96 PALET2.DAT
-$ ./rpgmk OPNTITLE.DAT 1 640 400 OPNTITLE.RGB
+$ ./imageview CHR00.DAT PALET.DAT 32 32
+$ ./imageview ENEMY00.DAT PALET2.DAT 80 96
+$ ./imageview OPNTITLE.DAT OPNTITLE.RGB 640 400
+$ ./patnview
 ```
 
 # 스크린샷
@@ -19,3 +20,4 @@ $ ./rpgmk OPNTITLE.DAT 1 640 400 OPNTITLE.RGB
 ![example_01.png](example_01.png)
 ![example_02.png](example_02.png)
 ![example_03.png](example_03.png)
+![example_04.png](example_04.png)

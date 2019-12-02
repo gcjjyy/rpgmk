@@ -1,4 +1,4 @@
-IMAGEVIEW = datview
+IMAGEVIEW = imageview
 PATNVIEW = patnview
 
 LDFLAGS = -lsdl2
