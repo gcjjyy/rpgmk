@@ -1,12 +1,18 @@
-TARGET = rpgmk
+IMAGEVIEW = datview
+PATNVIEW = patnview
 
 LDFLAGS = -lsdl2
 
-all: $(TARGET)
+all: $(IMAGEVIEW) $(PATNVIEW)
 
-$(TARGET): rpgmk.c
-	gcc -o $(TARGET) $(LDFLAGS) rpgmk.c
+$(IMAGEVIEW): imageview.c rpgmk.c
+	gcc -o $(IMAGEVIEW) $(LDFLAGS) imageview.c rpgmk.c
+
+$(PATNVIEW): patnview.c rpgmk.c
+	gcc -o $(PATNVIEW) $(LDFLAGS) patnview.c rpgmk.c
 
 clean:
-	@find . -name '$(TARGET)' -type f -delete
+	@find . -name '*.o' -type f -delete
+	@find . -name '$(IMAGEVIEW)' -type f -delete
+	@find . -name '$(PATNVIEW)' -type f -delete
 
