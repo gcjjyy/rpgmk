@@ -18,7 +18,7 @@ $ ./patnview
 # 스크린샷
 <img width="752" alt="example_01" src="https://user-images.githubusercontent.com/39606947/144691412-baf1b4f5-643a-48a7-9297-32ff34949215.png">
 <img width="752" alt="example_02" src="https://user-images.githubusercontent.com/39606947/144691416-74d01d49-a480-4f31-a162-89c553650f0d.png">
-<img width="752" alt="example_02" src="https://user-images.githubusercontent.com/39606947/144691418-2b318a2c-592d-4fc3-b463-773869012edb.png">
+<img width="752" alt="example_03" src="https://user-images.githubusercontent.com/39606947/144691452-89e077ae-1abd-4772-8d64-6d7793685b5a.png">
 <img width="1136" alt="example_04" src="https://user-images.githubusercontent.com/39606947/144691421-d25d190a-0b70-40aa-8c3b-9d0656651a0d.png">
 
 # 비고: RPGMK의 이미지 파일 특징
