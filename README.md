@@ -16,10 +16,10 @@ $ ./patnview
 ```
 
 # 스크린샷
-![example_01.png](example_01.png)
-![example_02.png](example_02.png)
-![example_03.png](example_03.png)
-![example_04.png](example_04.png)
+<img width="752" alt="example_01" src="https://user-images.githubusercontent.com/39606947/144691412-baf1b4f5-643a-48a7-9297-32ff34949215.png">
+<img width="752" alt="example_02" src="https://user-images.githubusercontent.com/39606947/144691416-74d01d49-a480-4f31-a162-89c553650f0d.png">
+<img width="752" alt="example_02" src="https://user-images.githubusercontent.com/39606947/144691418-2b318a2c-592d-4fc3-b463-773869012edb.png">
+<img width="1136" alt="example_04" src="https://user-images.githubusercontent.com/39606947/144691421-d25d190a-0b70-40aa-8c3b-9d0656651a0d.png">
 
 # 비고: RPGMK의 이미지 파일 특징
 ~~RPGMK의 이미지 파일은 한 픽셀이 4비트를 차지하고 있는 비압축 형식의 포맷이다. 하지만 보안 때문인지, 다르 어떤 이유 때문인지는 모르지만, 데이터를 매우 복잡하게 꼬아놓았기 때문에, 분석하는데 매우 애를 먹었다.~~
